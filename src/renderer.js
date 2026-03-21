@@ -19,12 +19,13 @@ export class Renderer {
   }
 
   // 绘制单个方块
-  drawBlock(x, y, color) {
+  drawBlock(x, y, color, alpha = 1) {
     const px = x * this.blockSize;
     const py = y * this.blockSize;
     const size = this.blockSize - 1; // 留1px间隙
 
     // 方块主体
+    this.ctx.globalAlpha = alpha;
     this.ctx.fillStyle = color;
     this.ctx.fillRect(px, py, size, size);
 
@@ -37,6 +38,29 @@ export class Renderer {
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
     this.ctx.fillRect(px, py + size - 2, size, 2);
     this.ctx.fillRect(px + size - 2, py, 2, size);
+    this.ctx.globalAlpha = 1;
+  }
+
+  // 绘制消除动画效果
+  drawLineClearAnimation(board, lines, progress) {
+    const grid = board.getGrid();
+    const alpha = 1 - progress; // 1 到 0，逐渐消失
+
+    // 绘制每一行
+    for (const y of lines) {
+      for (let x = 0; x < board.width; x++) {
+        if (grid[y] && grid[y][x]) {
+          // 绘制闪烁效果
+          this.ctx.fillStyle = progress < 0.5 ? '#ffffff' : grid[y][x];
+          this.ctx.globalAlpha = alpha * 0.8;
+          const px = x * this.blockSize;
+          const py = y * this.blockSize;
+          const size = this.blockSize - 1;
+          this.ctx.fillRect(px, py, size, size);
+          this.ctx.globalAlpha = 1;
+        }
+      }
+    }
   }
 
   // 绘制方块
@@ -51,7 +75,7 @@ export class Renderer {
   }
 
   // 绘制棋盘
-  drawBoard(board, blockSize = null) {
+  drawBoard(board, blockSize = null, clearingLines = null, clearProgress = 0) {
     const oldSize = this.blockSize;
     if (blockSize) this.blockSize = blockSize;
 
@@ -72,6 +96,11 @@ export class Renderer {
       }
     }
 
+    // 绘制消除动画
+    if (clearingLines && clearingLines.length > 0) {
+      this.drawLineClearAnimation(board, clearingLines, clearProgress);
+    }
+
     // 绘制边框
     this.ctx.strokeStyle = BORDER_COLOR;
     this.ctx.lineWidth = 2;
@@ -81,9 +110,9 @@ export class Renderer {
   }
 
   // 绘制完整场景（棋盘 + 当前方块）
-  render(board, currentPiece, nextPiece = null, nextPieceCanvas = null) {
+  render(board, currentPiece, nextPiece = null, nextPieceCanvas = null, clearingLines = null, clearProgress = 0) {
     this.clear();
-    this.drawBoard(board);
+    this.drawBoard(board, null, clearingLines, clearProgress);
 
     if (currentPiece) {
       this.drawPiece(currentPiece);

@@ -49,17 +49,28 @@ export class Board {
   // 消除满行，返回消除的行数
   clearLines() {
     let linesCleared = 0;
+    const clearedLines = [];
 
     // 从底部向上检查
     for (let y = this.height - 1; y >= 0; y--) {
       // 检查该行是否已满
       if (this.grid[y].every(cell => cell !== null)) {
-        // 移除该行
-        this.grid.splice(y, 1);
-        // 在顶部添加空行
-        this.grid.unshift(new Array(this.width).fill(null));
+        // 记录要消除的行
+        clearedLines.push(y);
         linesCleared++;
         y++; // 重新检查当前行（因为上面的行下移了）
+      }
+    }
+
+    // 实际移除满行
+    if (clearedLines.length > 0) {
+      // 从下往上移除
+      for (const y of clearedLines.sort((a, b) => b - a)) {
+        this.grid.splice(y, 1);
+      }
+      // 在顶部添加空行
+      for (let i = 0; i < clearedLines.length; i++) {
+        this.grid.unshift(new Array(this.width).fill(null));
       }
     }
 
