@@ -19,6 +19,14 @@ const difficultySelect = document.getElementById('difficulty');
 const pauseOverlay = document.getElementById('pause-overlay');
 const gameOverOverlay = document.getElementById('game-over-overlay');
 
+// 触摸控制按钮
+const touchRotate = document.getElementById('touch-rotate');
+const touchLeft = document.getElementById('touch-left');
+const touchDown = document.getElementById('touch-down');
+const touchRight = document.getElementById('touch-right');
+const touchHardDrop = document.getElementById('touch-hard-drop');
+const touchPause = document.getElementById('touch-pause');
+
 // 初始化渲染器
 const renderer = new Renderer(canvas, BLOCK_SIZE);
 renderer.setSize(BOARD_WIDTH * BLOCK_SIZE, BOARD_HEIGHT * BLOCK_SIZE);
@@ -125,6 +133,100 @@ document.addEventListener('keydown', (e) => {
 // 难度选择
 difficultySelect.addEventListener('change', (e) => {
   game.setDifficulty(e.target.value);
+});
+
+// 触摸控制 - 旋转
+touchRotate.addEventListener('click', () => {
+  if (!game.isRunning || game.isPaused || game.isGameOver || game.isAnimating) return;
+  game.rotate();
+});
+
+// 触摸控制 - 向左移动（长按连续移动）
+let touchLeftInterval = null;
+touchLeft.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  if (!game.isRunning || game.isPaused || game.isGameOver || game.isAnimating) return;
+
+  game.moveLeft();
+
+  // 长按连续移动
+  touchLeftInterval = setInterval(() => {
+    if (game.isRunning && !game.isPaused && !game.isGameOver && !game.isAnimating) {
+      game.moveLeft();
+    }
+  }, 100);
+});
+
+touchLeft.addEventListener('touchend', () => {
+  if (touchLeftInterval) {
+    clearInterval(touchLeftInterval);
+    touchLeftInterval = null;
+  }
+});
+
+// 触摸控制 - 向下（长按连续下落）
+let touchDownInterval = null;
+touchDown.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  if (!game.isRunning || game.isPaused || game.isGameOver || game.isAnimating) return;
+
+  game.drop();
+
+  touchDownInterval = setInterval(() => {
+    if (game.isRunning && !game.isPaused && !game.isGameOver && !game.isAnimating) {
+      game.drop();
+    }
+  }, 100);
+});
+
+touchDown.addEventListener('touchend', () => {
+  if (touchDownInterval) {
+    clearInterval(touchDownInterval);
+    touchDownInterval = null;
+  }
+});
+
+// 触摸控制 - 向右移动（长按连续移动）
+let touchRightInterval = null;
+touchRight.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  if (!game.isRunning || game.isPaused || game.isGameOver || game.isAnimating) return;
+
+  game.moveRight();
+
+  touchRightInterval = setInterval(() => {
+    if (game.isRunning && !game.isPaused && !game.isGameOver && !game.isAnimating) {
+      game.moveRight();
+    }
+  }, 100);
+});
+
+touchRight.addEventListener('touchend', () => {
+  if (touchRightInterval) {
+    clearInterval(touchRightInterval);
+    touchRightInterval = null;
+  }
+});
+
+// 触摸控制 - 硬降
+touchHardDrop.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!game.isRunning || game.isPaused || game.isGameOver || game.isAnimating) return;
+  game.hardDrop();
+});
+
+// 触摸控制 - 暂停/继续
+touchPause.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!game.isRunning) return;
+
+  if (game.isPaused) {
+    game.resume();
+    updatePauseOverlay();
+  } else if (!game.isGameOver) {
+    game.pause();
+    updatePauseOverlay();
+  }
 });
 
 console.log('俄罗斯方块游戏初始化完成');

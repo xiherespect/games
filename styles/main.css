@@ -216,3 +216,57 @@ canvas#game-canvas {
     width: 100%;
   }
 }
+
+/* 触摸控制 */
+.touch-controls {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.touch-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.touch-btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4a4a6a;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.1s;
+}
+
+.touch-btn:active {
+  background-color: #5aa5f2;
+}
+
+.touch-btn svg {
+  pointer-events: none;
+}
+
+.touch-btn-large {
+  width: 70px;
+  height: 70px;
+}
+
+.touch-btn-drop {
+  background-color: #3a7bc8;
+}
+
+/* 在小屏幕上显示触摸控制 */
+@media (max-width: 768px) {
+  .touch-controls {
+    display: flex;
+  }
+}
