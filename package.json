@@ -1,0 +1,14 @@
+{
+  "name": "tetris-game",
+  "version": "1.0.0",
+  "description": "经典的俄罗斯方块网页版游戏，支持多种难度级别和方块形状，为玩家提供熟悉的方块消除体验。当前阶段：项目初始化。",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.1"
+  }
+}
