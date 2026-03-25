@@ -41,17 +41,23 @@ h2 {
   align-items: flex-start;
 }
 
-.side-panel {
+.left-panel,
+.right-panel {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 120px;
+}
+
+.left-panel {
+  align-items: center;
 }
 
 .info-box {
   background-color: #2d2d44;
   padding: 12px;
   border-radius: 8px;
-  min-width: 140px;
+  width: 100%;
 }
 
 canvas#next-piece-canvas {
@@ -194,13 +200,14 @@ canvas#game-canvas {
 }
 
 /* 响应式设计 */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .game-container {
     flex-direction: column;
     align-items: center;
   }
 
-  .side-panel {
+  .left-panel,
+  .right-panel {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
@@ -214,6 +221,10 @@ canvas#game-canvas {
 
   .controls {
     width: 100%;
+  }
+
+  .touch-controls {
+    display: flex;
   }
 }
 
@@ -262,11 +273,4 @@ canvas#game-canvas {
 
 .touch-btn-drop {
   background-color: #3a7bc8;
-}
-
-/* 在小屏幕上显示触摸控制 */
-@media (max-width: 768px) {
-  .touch-controls {
-    display: flex;
-  }
 }

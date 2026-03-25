@@ -58,7 +58,6 @@ export class Board {
         // 记录要消除的行
         clearedLines.push(y);
         linesCleared++;
-        y++; // 重新检查当前行（因为上面的行下移了）
       }
     }
 

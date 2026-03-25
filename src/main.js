@@ -106,21 +106,25 @@ document.addEventListener('keydown', (e) => {
     case 'ArrowLeft':
     case 'a':
     case 'A':
+      e.preventDefault();
       game.moveLeft();
       break;
     case 'ArrowRight':
     case 'd':
     case 'D':
+      e.preventDefault();
       game.moveRight();
       break;
     case 'ArrowDown':
     case 's':
     case 'S':
+      e.preventDefault();
       game.drop();
       break;
     case 'ArrowUp':
     case 'w':
     case 'W':
+      e.preventDefault();
       game.rotate();
       break;
     case ' ':

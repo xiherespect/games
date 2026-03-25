@@ -11,12 +11,8 @@
     <h1>俄罗斯方块</h1>
 
     <div class="game-container">
-      <div class="side-panel">
-        <div class="info-box">
-          <h2>下一个</h2>
-          <canvas id="next-piece-canvas" width="120" height="120"></canvas>
-        </div>
-
+      <!-- 左列：分数信息 -->
+      <div class="left-panel">
         <div class="info-box">
           <h2>分数</h2>
           <div class="score" id="score">0</div>
@@ -26,31 +22,9 @@
           <h2>最高分</h2>
           <div class="score" id="high-score">0</div>
         </div>
-
-        <div class="info-box">
-          <h2>难度</h2>
-          <select id="difficulty">
-            <option value="easy">简单</option>
-            <option value="medium" selected>中等</option>
-            <option value="hard">困难</option>
-          </select>
-        </div>
-
-        <button id="start-button" class="start-button">开始游戏</button>
-
-        <div class="controls">
-          <h2>操作说明</h2>
-          <table>
-            <tr><td>← / A</td><td>向左移动</td></tr>
-            <tr><td>→ / D</td><td>向右移动</td></tr>
-            <tr><td>↓ / S</td><td>加速下落</td></tr>
-            <tr><td>↑ / W</td><td>旋转方块</td></tr>
-            <tr><td>空格</td><td>直接落底</td></tr>
-            <tr><td>P</td><td>暂停/继续</td></tr>
-          </table>
-        </div>
       </div>
 
+      <!-- 中列：游戏棋盘 -->
       <div class="game-board">
         <canvas id="game-canvas"></canvas>
         <div id="pause-overlay" class="overlay hidden">
@@ -103,6 +77,37 @@
               </svg>
             </button>
           </div>
+        </div>
+      </div>
+
+      <!-- 右列：控制面板 -->
+      <div class="right-panel">
+        <div class="info-box">
+          <h2>下一个</h2>
+          <canvas id="next-piece-canvas" width="120" height="120"></canvas>
+        </div>
+
+        <div class="info-box">
+          <h2>难度</h2>
+          <select id="difficulty">
+            <option value="easy">简单</option>
+            <option value="medium" selected>中等</option>
+            <option value="hard">困难</option>
+          </select>
+        </div>
+
+        <button id="start-button" class="start-button">开始游戏</button>
+
+        <div class="controls">
+          <h2>操作说明</h2>
+          <table>
+            <tr><td>← / A</td><td>向左移动</td></tr>
+            <tr><td>→ / D</td><td>向右移动</td></tr>
+            <tr><td>↓ / S</td><td>加速下落</td></tr>
+            <tr><td>↑ / W</td><td>旋转方块</td></tr>
+            <tr><td>空格</td><td>直接落底</td></tr>
+            <tr><td>P</td><td>暂停/继续</td></tr>
+          </table>
         </div>
       </div>
     </div>

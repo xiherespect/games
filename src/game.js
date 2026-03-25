@@ -96,7 +96,6 @@ export class Game {
     if (this.isAnimating) {
       const now = performance.now();
       const progress = Math.min(1, (now - this.animationStartTime) / CLEAR_ANIMATION_DURATION);
-
       this.animationId = requestAnimationFrame(() => this.loop());
       return { animating: true, progress, clearingLines: this.clearingLines };
     }
@@ -125,65 +124,27 @@ export class Game {
     } else {
       // 固定方块
       this.board.lockPiece(this.currentPiece);
-
       // 检查并记录要消除的行
       this.checkAndStartClearAnimation();
-
-      // 生成新方块
-      this.spawnPiece();
     }
-  }
-
-  // 检查是否需要播放消除动画
-  checkAndStartClearAnimation() {
-    const clearedRows = [];
-    for (let y = 0; y < this.board.height; y++) {
-      if (this.board.grid[y].every(cell => cell !== null)) {
-        clearedRows.push(y);
-      }
-    }
-
-    if (clearedRows.length > 0) {
-      this.startClearAnimation(clearedRows);
-    } else {
-      // 没有消除，直接处理计分
-      const linesCleared = this.board.clearLines();
-      this.addScore(linesCleared);
-    }
-  }
-
-  // 开始消除动画
-  startClearAnimation(rows) {
-    this.isAnimating = true;
-    this.animationStartTime = performance.now();
-    this.clearingLines = rows;
-  }
-
-  // 结束消除动画
-  endClearAnimation() {
-    // 实际消除行
-    const linesCleared = this.board.clearLines();
-    this.addScore(linesCleared);
-
-    this.isAnimating = false;
-    this.clearingLines = [];
-    this.spawnPiece();
   }
 
   // 快速下落（直接到底部）
   hardDrop() {
     if (this.isAnimating) return; // 动画中不下落
 
+    let dropCount = 0;
     while (this.board.isValidMove(this.currentPiece, 0, 1)) {
       this.currentPiece.y++;
-      this.score += 1; // 硬降每格加1分
+      dropCount++;
     }
+
     // 固定方块
     this.board.lockPiece(this.currentPiece);
+    this.score += dropCount; // 硬降每格加1分
 
     // 检查并记录要消除的行
     this.checkAndStartClearAnimation();
-
     this.updateScore();
   }
 
@@ -239,6 +200,49 @@ export class Game {
       this.difficulty = difficulty;
       this.dropInterval = DIFFICULTY_SPEEDS[difficulty];
     }
+  }
+
+  // 检查是否需要播放消除动画
+  checkAndStartClearAnimation() {
+    const clearedRows = [];
+    for (let y = 0; y < this.board.height; y++) {
+      if (this.board.grid[y].every(cell => cell !== null)) {
+        clearedRows.push(y);
+      }
+    }
+
+    if (clearedRows.length > 0) {
+      this.startClearAnimation(clearedRows);
+    } else {
+      // 没有消除，直接生成新方块
+      this.spawnPiece();
+    }
+  }
+
+  // 开始消除动画
+  startClearAnimation(rows) {
+    this.isAnimating = true;
+    this.animationStartTime = performance.now();
+    this.clearingLines = rows;
+
+    // 等待动画结束再生成新方块
+    setTimeout(() => {
+      this.endClearAnimation();
+    }, CLEAR_ANIMATION_DURATION);
+  }
+
+  // 结束消除动画
+  endClearAnimation() {
+    // 实际消除行
+    const linesCleared = this.board.clearLines();
+    this.addScore(linesCleared);
+
+    // 重置状态，允许游戏继续
+    this.isAnimating = false;
+    this.clearingLines = [];
+
+    // 生成新方块
+    this.spawnPiece();
   }
 
   // 计分
